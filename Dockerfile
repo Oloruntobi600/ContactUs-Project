@@ -1,17 +1,23 @@
-# Use the official OpenJDK image
-FROM openjdk:17-jdk-slim
+# First stage: build the application
+FROM openjdk:17-jdk-slim AS builder
 
 # Set the working directory
 WORKDIR /app
 
 # Copy the Maven build files into the container
-COPY . /app
+COPY . .
 
 # Run Maven to build the project (this generates the JAR in /app/target)
 RUN ./mvnw clean package
 
-# Copy the generated JAR to the correct location
-COPY target/ContactUs-0.0.1-SNAPSHOT.jar /app/ContactUs.jar
+# Second stage: create a smaller image with only the JAR file
+FROM openjdk:17-jdk-slim
+
+# Set the working directory
+WORKDIR /app
+
+# Copy the generated JAR from the builder stage
+COPY --from=builder /app/target/ContactUs-0.0.1-SNAPSHOT.jar /app/ContactUs.jar
 
 # Expose port 8080
 EXPOSE 8080
