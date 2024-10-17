@@ -10,6 +10,7 @@ import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.util.List;
 
 @Service
 public class ContactServiceImpl implements ContactService {
@@ -38,6 +39,7 @@ public class ContactServiceImpl implements ContactService {
             e.printStackTrace();
             throw new RuntimeException("Error sending email: " + e.getMessage());
         }
+
     }
 
     @Override
@@ -49,4 +51,10 @@ public class ContactServiceImpl implements ContactService {
             throw new RuntimeException("Error saving contact to CSV: " + e.getMessage());
         }
     }
+
+    @Override
+    public List<Contact> getAllContacts() {
+        return contactRepository.findAll(); // Assuming you have a method in your repository
+    }
+
 }

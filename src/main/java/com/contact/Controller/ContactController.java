@@ -4,10 +4,9 @@ import com.contact.Model.Contact;
 import com.contact.Service.ContactService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/contact")
@@ -23,5 +22,10 @@ public class ContactController {
         contactService.saveContactToCsv(contact);
 
         return "Message received, we'll get back to you shortly.";
+    }
+
+    @GetMapping
+    public List<Contact> getAllContacts() {
+        return contactService.getAllContacts();
     }
 }
