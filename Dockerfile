@@ -1,14 +1,15 @@
 # First stage: build the application
-FROM openjdk:17-jdk-slim AS builder
+FROM maven:3.8.4-openjdk-17-slim AS builder
 
 # Set the working directory
 WORKDIR /app
 
 # Copy the Maven build files into the container
-COPY . .
+COPY pom.xml .
+COPY src ./src
 
 # Run Maven to build the project (this generates the JAR in /app/target)
-RUN ./mvnw clean package
+RUN mvn clean package
 
 # Second stage: create a smaller image with only the JAR file
 FROM openjdk:17-jdk-slim
