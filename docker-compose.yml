@@ -1,0 +1,35 @@
+version: '3.8'
+services:
+  app:
+    image: contactus:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: contactus_app
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/contact_us
+      SPRING_DATASOURCE_USERNAME: ${DB_USERNAME}
+      SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD}
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+    depends_on:
+      - db
+    networks:
+      - contactus-network
+
+  db:
+    image: postgres:14
+    container_name: contactus_db
+    environment:
+      POSTGRES_DB: contact_us
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    ports:
+      - "5432:5432"
+    networks:
+      - contactus-network
+
+networks:
+  contactus-network:
+    driver: bridge

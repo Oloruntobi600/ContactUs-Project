@@ -22,14 +22,22 @@ public class ContactServiceImpl implements ContactService {
 
     @Override
     public void sendEmail(Contact contact) {
-        SimpleMailMessage message = new SimpleMailMessage();
-        message.setTo("oloruntobiajayi@yahoo.com"); // Footprint email address
-        message.setSubject("New Contact Us Form Submission");
-        message.setText("Full Name: " + contact.getFullName() + "\n"
-                + "Email: " + contact.getEmail() + "\n"
-                + "Message: " + contact.getMessage());
+        try {
+            SimpleMailMessage message = new SimpleMailMessage();
+            message.setTo("oloruntobiajayi@yahoo.com"); // Your email address
+            message.setSubject("New Contact Us Form Submission");
+            message.setText("Full Name: " + contact.getFullName() + "\n"
+                    + "Email: " + contact.getEmail() + "\n"
+                    + "Message: " + contact.getMessage());
 
-        mailSender.send(message);
+            System.out.println("Sending email to: " + message.getTo());
+            System.out.println("Email Subject: " + message.getSubject());
+
+            mailSender.send(message);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException("Error sending email: " + e.getMessage());
+        }
     }
 
     @Override
@@ -38,6 +46,7 @@ public class ContactServiceImpl implements ContactService {
             contactRepository.saveToCsv(contact);
         } catch (IOException e) {
             e.printStackTrace();
+            throw new RuntimeException("Error saving contact to CSV: " + e.getMessage());
         }
     }
 }
